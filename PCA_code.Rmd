@@ -1,0 +1,127 @@
+---
+title: "PCA code"
+author: "Kevin Cunningham"
+date: "6/29/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library("FactoMineR")
+library("stats")
+library("factoextra")
+library("ggfortify")
+```
+
+
+```{r}
+quantile_df <- read.csv("/Users/Kevin/Desktop/Grad school docs and past classes/New_RA_Project_code/PCA/after_quantile_reduced_set.csv")
+```
+
+
+
+```{r}
+quantile_table <- quantile_df[,1:1622]
+print(quantile_table)
+```
+
+```{r}
+pca1 <- PCA(quantile_table, scale.unit = FALSE, ncp = 5, graph= T)
+```
+
+```{r}
+plot(pca1)
+```
+
+
+
+
+```{r}
+pca2 <- prcomp(quantile_table, scale. = F)
+#print(pca2)
+```
+
+```{r}
+autoplot(pca2, data = quantile_df, colour = 'Sample_Status', frame.type = 'norm')
+```
+
+```{r}
+pca3 <- prcomp(quantile_table, scale. = T)
+#print(pca2)
+```
+
+```{r}
+autoplot(pca3, data = quantile_df, colour = 'Sample_Status', frame.type = 'norm')
+```
+
+
+
+
+```{r}
+fviz_contrib(pca2, choice = "var", axes = 1, top = 10, xtickslab.rt=90)
+```
+
+Use the top 5 features from dimension 1
+1. RBPJ
+2. IGHG1
+3. MX1
+4. TPM1
+5. KRT19
+
+```{r}
+fviz_contrib(pca2, choice = "var", axes = 2, top = 10, xtickslab.rt=90)
+```
+
+Use the top 5 features from dimension 2
+1. IGHG1
+2. MX1
+3. PKNOX1
+4. KRT19
+5. RBPJ
+
+
+
+
+
+Use the top 5 features from both
+1. RBPJ (x2)
+2. IGHG1 (x2)
+3. MX1 (x2)
+4. TPM1
+5. KRT19 (x2)
+6. IGHG1
+7. MX1
+8. PKNOX1
+9. KRT19
+10. RBPJ
+
+Remove duplicates
+1. RBPJ
+2. IGHG1
+3. MX1
+4. TPM1
+5. KRT19
+6. PKNOX1
+
+quantile_df has all the data
+Make into a dataframe
+```{r}
+PCA_features <- as.data.frame(matrix(data = 0, nrow = 94, ncol = 1))
+PCA_features$V1 <- quantile_df$RBPJ
+colnames(PCA_features) <- cbind("RBPJ")
+PCA_features$IGHG1 <- quantile_df$IGHG1
+PCA_features$MX1 <- quantile_df$MX1
+PCA_features$TPM1 <- quantile_df$TPM1
+PCA_features$KRT19 <- quantile_df$KRT19
+PCA_features$PKNOX1 <- quantile_df$PKNOX1
+PCA_features$Sample_Status <- quantile_df$Sample_Status
+PCA_features$Case_ID <- quantile_df$Case_ID
+#View(PCA_features)
+```
+
+
+All 6 features plus the sample status and case ID are in
+the dataframe "PCA_features"
+
+
